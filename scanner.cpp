@@ -25,6 +25,14 @@ Token* Scanner::nextToken() {
         string word = input.substr(first, current - first);
         if (word == "print") {
             token = new Token(Token::PRINT, word, 0, word.length());
+        } else if(word == "if") {
+            token = new Token(Token::IF, word, 0, word.length());
+        }else if(word == "then") {
+            token = new Token(Token::THEN, word, 0, word.length());
+        }else if(word == "else") {
+            token = new Token(Token::ELSE, word, 0, word.length());
+        }else if(word == "endif") {
+            token = new Token(Token::ENDIF, word, 0, word.length());
         }
         else {
             token = new Token(Token::ID, word, 0, word.length());
@@ -43,6 +51,7 @@ Token* Scanner::nextToken() {
                     token = new Token(Token::IGUAL, c);
                 } else {
                     token = new Token(Token::ASSIGN, c);
+                    current--;
                 }break;
 
             case ';': token = new Token(Token::PC, c); break;
@@ -53,7 +62,6 @@ Token* Scanner::nextToken() {
                 } else {
                     token = new Token(Token::MENOR, c);
                     current--;
-
                 }
                 break;
             default:

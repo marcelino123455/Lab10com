@@ -30,6 +30,10 @@ std::ostream& operator << ( std::ostream& outs, const Token & tok )
         case Token::MENOR: outs << "TOKEN(MENOR)"; break;
         case Token::MENORIGUAL: outs << "TOKEN(MENORIGUAL)"; break;
         case Token::IGUAL: outs << "TOKEN(IGUAL)"; break;
+        case Token::IF: outs << "TOKEN(IF)"; break;
+        case Token::THEN: outs << "TOKEN(THEN)"; break;
+        case Token::ELSE: outs << "TOKEN(ELSE)"; break;
+        case Token::ENDIF: outs << "TOKEN(ENDIF)"; break;
         default: outs << "TOKEN(UNKNOWN)"; break;
     }
     return outs;

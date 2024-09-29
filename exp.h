@@ -6,7 +6,7 @@
 #include <list>
 #include "visitor.h"
 #include "iostream"
-
+using namespace std;
 enum BinaryOp { PLUS_OP, MINUS_OP, MUL_OP, DIV_OP, MENOR, MENORIGUAL, IGUAL };
 
 class Exp {
@@ -62,6 +62,19 @@ public:
     PrintStatement(Exp* e);
     int accept(Visitor* visitor);
     ~PrintStatement();
+};
+
+class IFStatement : public Stm {
+public:
+    Exp* CExp;
+    std::list<Stm*> slist1;
+    std::list<Stm*> slist2;
+    int accept(Visitor* visitor);
+    IFStatement() = default;
+    IFStatement(Exp* e, list<Stm*> slist, list<Stm*>slist3)
+    :CExp(e), slist1(slist), slist2(slist3) {
+    }
+    ~IFStatement(){}
 };
 
 class Program {

@@ -68,7 +68,10 @@ Program* Parser::parseProgram() {
 Stm* Parser::parseStatement() {
     Stm* s = NULL;
     Exp* e;
-    
+
+    Exp* expif;
+    list<Stm*> slist1;
+    list<Stm*> slist2;
     if (current == NULL) {
         cout << "Error: Token actual es NULL" << endl;
         exit(1);
@@ -94,7 +97,39 @@ Stm* Parser::parseStatement() {
             exit(1);
         }
         s = new PrintStatement(e);
-    } else {
+    }else if (match(Token::IF)) {
+        expif = parseCExp();
+        if (!match(Token::THEN)) {
+            cout << "Error: Se esperaba un THEN" << endl;
+            exit(1);
+        }
+        cout<<"Estoy en el if"<<endl; //Del
+        cout<<"El token es: "<<current->text<<endl; //Del
+        while (!check(Token::ELSE) and !check(Token::ENDIF) and !isAtEnd()) {
+            if (!check(Token::PC)) {
+                slist1.push_back(parseStatement());
+            } else {
+                match(Token::PC);
+            }
+        }
+        if (match(Token::ELSE)) {
+            while (!check(Token::ENDIF) and !isAtEnd()) {
+                if (!check(Token::PC)) {
+                    slist2.push_back(parseStatement());
+                } else {
+                    match(Token::PC);
+                }
+            }
+        }
+
+        if(!match(Token::ENDIF)) {
+            cout<<"Uy error como podria terminar un if"<<endl;
+            exit(9);
+        }
+        s = new IFStatement(expif, slist1, slist2);
+    }
+
+    else {
         cout << "Error: Se esperaba un identificador o 'print', pero se encontró: " << *current << endl;
         exit(1);
     }
@@ -153,6 +188,8 @@ Exp* Parser::parseTerm() {
 
 Exp* Parser::parseFactor() {
     Exp* e;
+    cout<<"El token en factor  es: "<<current->text<<endl; //Del
+
     if (match(Token::NUM)) {
         return new NumberExp(stoi(previous->text));
     }
@@ -160,13 +197,14 @@ Exp* Parser::parseFactor() {
         return new IdentifierExp(previous->text);
     }
     else if (match(Token::PI)){
-        e = parseExpression();
+        e = parseCExp();
         if (!match(Token::PD)){
             cout << "Falta paréntesis derecho" << endl;
             exit(0);
         }
         return e;
     }
+
     cout << "Error: se esperaba un número o identificador." << endl;
     exit(0);
 }

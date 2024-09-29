@@ -27,6 +27,11 @@ int PrintStatement::accept(Visitor* visitor) {
     return 0;
 }
 
+int IFStatement::accept(Visitor* visitor) {
+    visitor->visit(this);
+    return 0;
+}
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +63,23 @@ void PrintVisitor::visit(PrintStatement* stm) {
     cout << "print(";
     stm->e->accept(this);
     cout << ");";
+}
+
+
+
+void PrintVisitor::visit(IFStatement* stm) {
+    cout << "if ";
+    stm->CExp->accept(this);
+    cout<<" then"<<endl;
+    for (auto item: stm->slist1) {
+        item->accept(this);
+    }
+    cout<<"\n";
+    cout<<"else: "<<endl;
+    for (auto item: stm->slist2) {
+        item->accept(this);
+    }
+    cout<<"\nendif";
 }
 
 void PrintVisitor::imprimir(Program* program){
@@ -117,6 +139,10 @@ void EVALVisitor::visit(AssignStatement* stm) {
 void EVALVisitor::visit(PrintStatement* stm) {
     cout << stm->e->accept(this);
 }
+void EVALVisitor::visit(IFStatement* stm) {
+    cout << stm->accept(this);
+}
+
 void EVALVisitor::ejecutar(Program* program){
     for (Stm* s : program->slist) {
         s->accept(this);
